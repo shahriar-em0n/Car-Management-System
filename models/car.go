@@ -22,17 +22,17 @@ type Car struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type CarRequest struct{
-	Name string `json:"name"`
-	Year string `json:"year"`
-	Brand string `json:"brand"`
-	FuelType string `json:"fuel_type"`
-	Engine Engine `json:"engine"`
-	Price float64 `json:"price"`
+type CarRequest struct {
+	Name     string  `json:"name"`
+	Year     string  `json:"year"`
+	Brand    string  `json:"brand"`
+	FuelType string  `json:"fuel_type"`
+	Engine   Engine  `json:"engine"`
+	Price    float64 `json:"price"`
 }
 
-func ValidateRequest(carReq CarRequest) error{
-	if err := validateName(carReq.Name); err!= nil {
+func ValidateRequest(carReq CarRequest) error {
+	if err := validateName(carReq.Name); err != nil {
 		return err
 	}
 	if err := validateYear(carReq.Year); err != nil {
@@ -44,25 +44,24 @@ func ValidateRequest(carReq CarRequest) error{
 	if err := ValidateFuelType(carReq.FuelType); err != nil {
 		return err
 	}
-	if err := validateEngine(carReq.Engine); err != nil{
+	if err := validateEngine(carReq.Engine); err != nil {
 		return err
 	}
-	if err := validatePRice(carReq.Price); err != nil{
+	if err := validatePRice(carReq.Price); err != nil {
 		return err
 	}
 	return nil
 }
 
-
-func validateName(name string) error{
+func validateName(name string) error {
 	if name == "" {
 		return errors.New("Name is Required")
 	}
 	return nil
 }
 
-func validateYear(year string) error{
-	if year == ""{
+func validateYear(year string) error {
+	if year == "" {
 		return errors.New("Year is Required")
 	}
 	_, err := strconv.Atoi(year)
@@ -70,7 +69,7 @@ func validateYear(year string) error{
 		return errors.New("Year must be a valid number")
 	}
 	currentYear := time.Now().Year()
-	yearInt, _:= strconv.Atoi(year)
+	yearInt, _ := strconv.Atoi(year)
 
 	if yearInt < 1886 || yearInt > currentYear {
 		return errors.New("Year must be between 1886 and current year")
@@ -78,16 +77,16 @@ func validateYear(year string) error{
 	return nil
 }
 
-func validateBrand(brand string) error{
+func validateBrand(brand string) error {
 	if brand == "" {
 		return errors.New("Brand name is Required")
 	}
 	return nil
 }
 
-func ValidateFuelType(fuelType string) error{
+func ValidateFuelType(fuelType string) error {
 	ValidateFuelTypes := []string{"Persol", "Diesel", "Electric", "Hybrid"}
-	for _, validType := range ValidateFuelTypes{
+	for _, validType := range ValidateFuelTypes {
 		if fuelType == validType {
 			return nil
 		}
@@ -95,7 +94,7 @@ func ValidateFuelType(fuelType string) error{
 	return errors.New("Fuel type must be one of : Persol, Diesel, Electric, Hybrid")
 }
 
-func validateEngine(engine Engine) error{
+func validateEngine(engine Engine) error {
 	if engine.EngineID == uuid.Nil {
 		return errors.New("Enngine id is Required")
 	}
@@ -111,7 +110,7 @@ func validateEngine(engine Engine) error{
 	return nil
 }
 
-func validatePRice(price float64) error{
+func validatePRice(price float64) error {
 	if price <= 0 {
 		return errors.New("price must be greater than zero")
 	}
