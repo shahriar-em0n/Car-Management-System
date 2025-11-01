@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	// "github.com/docker/docker/daemon/names"
@@ -36,3 +37,19 @@ func validateName(name string) error{
 	return nil
 }
 
+func validateYear(year string) error{
+	if year == ""{
+		return errors.New("Year is Required")
+	}
+	_, err := strconv.Atoi(year)
+	if err != nil {
+		return errors.New("Year must be a valid number")
+	}
+	currentYear := time.Now().Year()
+	yearInt, _:= strconv.Atoi(year)
+
+	if yearInt < 1886 || yearInt > currentYear {
+		return errors.New("Year must be between 1886 and current year")
+	}
+	return nil
+}
