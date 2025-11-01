@@ -1,6 +1,7 @@
 package models
 
 import (
+	// "CMS/handler/engine"
 	"errors"
 	"strconv"
 	"time"
@@ -29,6 +30,29 @@ type CarRequest struct{
 	Engine Engine `json:"engine"`
 	Price float64 `json:"price"`
 }
+
+func ValidateRequest(carReq CarRequest) error{
+	if err := validateName(carReq.Name); err!= nil {
+		return err
+	}
+	if err := validateYear(carReq.Year); err != nil {
+		return err
+	}
+	if err := validateBrand(carReq.Brand); err != nil {
+		return err
+	}
+	if err := ValidateFuelType(carReq.FuelType); err != nil {
+		return err
+	}
+	if err := validateEngine(carReq.Engine); err != nil{
+		return err
+	}
+	if err := validatePRice(carReq.Price); err != nil{
+		return err
+	}
+	return nil
+}
+
 
 func validateName(name string) error{
 	if name == "" {
@@ -69,4 +93,27 @@ func ValidateFuelType(fuelType string) error{
 		}
 	}
 	return errors.New("Fuel type must be one of : Persol, Diesel, Electric, Hybrid")
+}
+
+func validateEngine(engine Engine) error{
+	if engine.EngineID == uuid.Nil {
+		return errors.New("Enngine id is Required")
+	}
+	if engine.Displacement <= 0 {
+		return errors.New("displacement must be greater than zero")
+	}
+	if engine.NoOfCyclinders <= 0 {
+		return errors.New("number of Cyclinders must be greater than zero")
+	}
+	if engine.CarRange <= 0 {
+		return errors.New("car range must be greater than zero")
+	}
+	return nil
+}
+
+func validatePRice(price float64) error{
+	if price <= 0 {
+		return errors.New("price must be greater than zero")
+	}
+	return nil
 }
