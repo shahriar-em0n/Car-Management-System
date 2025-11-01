@@ -53,3 +53,20 @@ func validateYear(year string) error{
 	}
 	return nil
 }
+
+func validateBrand(brand string) error{
+	if brand == "" {
+		return errors.New("Brand name is Required")
+	}
+	return nil
+}
+
+func ValidateFuelType(fuelType string) error{
+	ValidateFuelTypes := []string{"Persol", "Diesel", "Electric", "Hybrid"}
+	for _, validType := range ValidateFuelTypes{
+		if fuelType == validType {
+			return nil
+		}
+	}
+	return errors.New("Fuel type must be one of : Persol, Diesel, Electric, Hybrid")
+}
