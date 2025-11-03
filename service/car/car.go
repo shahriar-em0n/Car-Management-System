@@ -46,8 +46,7 @@ func (s *CarService) CreateCar(ctx context.Context, car *models.CarRequest) (*mo
 	return &createdCar, nil
 }
 
-
-func(s *CarService) UpdateCar(ctx, context.Context, id string, carReq *models.CarRequest)(*models.Car, error){
+func (s *CarService) UpdateCar(ctx context.Context, id string, carReq *models.CarRequest) (*models.Car, error) {
 	if err := models.ValidateRequest(*carReq); err != nil {
 		return nil, err
 	}
@@ -59,4 +58,13 @@ func(s *CarService) UpdateCar(ctx, context.Context, id string, carReq *models.Ca
 
 	return &updatedCar, nil
 
+}
+
+func (s *CarService) DeleteCar(ctx context.Context, id string) (*models.Car, error) {
+	deletedCar, err := s.store.DeleteCar(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &deletedCar, nil
 }
