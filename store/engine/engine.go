@@ -168,13 +168,13 @@ func (e EngineStore) EngineDelete(ctx context.Context, id string) (models.Engine
 		return engine, err
 	}
 
-	result, err:= tx.ExecContext(ctx, "DELETE FROM engine WHERE id=$1",id)
+	result, err := tx.ExecContext(ctx, "DELETE FROM engine WHERE id=$1", id)
 	if err != nil {
 		return models.Engine{}, err
 	}
 
 	rowAffected, err := result.RowsAffected()
-	if err!= nil {
+	if err != nil {
 		return models.Engine{}, err
 	}
 	if rowAffected == 0 {
