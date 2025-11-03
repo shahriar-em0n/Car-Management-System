@@ -45,3 +45,18 @@ func (s *CarService) CreateCar(ctx context.Context, car *models.CarRequest) (*mo
 	}
 	return &createdCar, nil
 }
+
+
+func(s *CarService) UpdateCar(ctx, context.Context, id string, carReq *models.CarRequest)(*models.Car, error){
+	if err := models.ValidateRequest(*carReq); err != nil {
+		return nil, err
+	}
+
+	updatedCar, err := s.store.UpdateCar(ctx, id, *&carReq)
+	if err != nil {
+		return nil, err
+	}
+
+	return &updatedCar, nil
+
+}
