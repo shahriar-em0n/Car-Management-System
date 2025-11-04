@@ -49,7 +49,7 @@ func (e *EngineHandler) GetEngineById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func(e *EngineHandler) CreateEngine(w http.ResponseWriter, r *http.Request){
+func (e *EngineHandler) CreateEngine(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	body, err := io.ReadAll(r.Body)
@@ -62,7 +62,7 @@ func(e *EngineHandler) CreateEngine(w http.ResponseWriter, r *http.Request){
 	var engineReq models.EngineRequest
 
 	err = json.Unmarshal(body, &engineReq)
-	if err !=nil {
+	if err != nil {
 		log.Println("Error Unmarshelling engine Request body: ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -85,5 +85,46 @@ func(e *EngineHandler) CreateEngine(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
-	_,_ =w.Write(resBody)
+	_, _ = w.Write(resBody)
+}
+
+func (e *EngineHandler) UpdateEngine(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	params := mux.Vars(r)
+	id := params["id"]
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading request body: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var engineReq models.EngineRequest
+	err = json.Unmarshal(body, &engineReq)
+
+	if err != nil {
+		log.Println("Error Unmarshalling engine request body: ", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	updatedEgnine, err := e.service.UpdateEngine(ctx, id, &engineReq)
+	if err != nil {
+		log.Println("Error while updateing Engine: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	resBody, err := json.Marshal(updatedEgnine)
+	if err != nil {
+		log.Println("Error marshalling response body: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	_, _ = w.Write(resBody)
+
 }
