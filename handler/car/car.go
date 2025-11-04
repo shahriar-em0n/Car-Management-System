@@ -156,3 +156,32 @@ func (h *CarHandler) UpdateCar(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(resBody)
 
 }
+
+func (h *CarHandler) DeleteCar(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	params := mux.Vars(r)
+	id := params["id"]
+
+	deletCar, err := h.service.DeleteCar(ctx, id)
+	if err != nil {
+		log.Println("Error While Deleting the Car: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	body, err := json.Marshal(deletCar)
+	if err != nil {
+		log.Println("Error while marshalling the response: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_, err = w.Write(body)
+	if err != nil {
+		log.Println("Error writing Response: ", err)
+	}
+}
