@@ -8,7 +8,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-playground/locales/et"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"google.golang.org/genproto/googleapis/cloud/aiplatform/v1/schema/predict/params"
 )
 
 type EngineHandler struct {
@@ -127,4 +130,43 @@ func (e *EngineHandler) UpdateEngine(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write(resBody)
 
+}
+
+func (e *EngineHandler) DeleteEngine(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	params := mux.Vars(r)
+	id := params["id"]
+
+	deletedEngine, err := e.service.DeleteEngine(ctx, id)
+	if err != nil {
+		log.Println("Error deleting engine: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := map[string]string{"error": "Invalid ID od Engine not Found"}
+		jsonResponse, _ := json.Marshal(response)
+		_, _ = w.Write(jsonResponse)
+		return
+	}
+
+	if deletedEngine.EngineID == uuid.Nil {
+		w.WriteHeader(http.StatusNotFound)
+		response := map[string]string{"error": "Engine Not Found"}
+		jsonResponse, _ := json.Marshal(response)
+		_, _ = w.Write(jsonResponse)
+		return
+	}
+
+	jsonResponse, err := json.Marshal(deletedEngine)
+	if err != nil {
+		log.Println("Error while marshalling deleted engine response:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := map[string]string{"error": "Internal server error"}
+		jsonResponse, _ := json.Marshal(response)
+		_, _ = w.Write(jsonResponse)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(jsonResponse)
 }
