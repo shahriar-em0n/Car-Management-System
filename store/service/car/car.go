@@ -16,7 +16,7 @@ func NewCarService(store store.CarStoreInferface) *CarService {
 	}
 }
 
-func (s *CarService) GetByID(ctx context.Context, id string) (*models.Car, error) {
+func (s *CarService) GetCarByID(ctx context.Context, id string) (*models.Car, error) {
 	car, err := s.store.GetCarById(ctx, id)
 	if err != nil {
 		return nil, err

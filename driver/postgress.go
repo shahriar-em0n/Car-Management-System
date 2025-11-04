@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
-var(
+var (
 	db *sql.DB
 )
 
@@ -19,6 +20,9 @@ func InitDB() {
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
 	)
+
+	fmt.Println("Waiting for the database Start up...")
+	time.Sleep(5 * time.Second)
 
 	db, err := sql.Open("postgress", connStr)
 	if err != nil {
@@ -33,7 +37,12 @@ func InitDB() {
 	fmt.Println("SuccesFully Connected to the database")
 }
 
-func GetDB() *sql.DB{
+func GetDB() *sql.DB {
 	return db
 }
 
+func CloseDB() {
+	if err := db.Close(); err != nil {
+		log.Fatalf("Error Closing The Database: %v", err)
+	}
+}

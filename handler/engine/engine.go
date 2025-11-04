@@ -8,10 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-playground/locales/et"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"google.golang.org/genproto/googleapis/cloud/aiplatform/v1/schema/predict/params"
 )
 
 type EngineHandler struct {
