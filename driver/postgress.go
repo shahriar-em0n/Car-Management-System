@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+var(
+	db *sql.DB
+)
+
 func InitDB() {
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		os.Getenv("DB_HOST"),
@@ -29,4 +33,7 @@ func InitDB() {
 	fmt.Println("SuccesFully Connected to the database")
 }
 
+func GetDB() *sql.DB{
+	return db
+}
 
