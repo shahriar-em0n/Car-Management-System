@@ -3,12 +3,16 @@ package engine
 import (
 	"CMS/models"
 	"CMS/store"
+	service "CMS/store/service"
 	"context"
 )
 
 type EngineService struct {
 	store store.EngineStoreInterface
 }
+
+// Ensure EngineService implements service.EngineServiceInterface
+var _ service.EngineServiceInterface = (*EngineService)(nil)
 
 func NewEngineService(store store.EngineStoreInterface) *EngineService {
 	return &EngineService{

@@ -2,7 +2,7 @@ package car
 
 import (
 	"CMS/models"
-	"CMS/service"
+	service "CMS/store/service"
 	"encoding/json"
 	"io"
 	"log"

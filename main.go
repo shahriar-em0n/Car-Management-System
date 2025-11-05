@@ -4,10 +4,10 @@ import (
 	"CMS/driver"
 	carHandler "CMS/handler/car"
 	engineHandler "CMS/handler/engine"
-	carService "CMS/service/car"
-	engineService "CMS/service/engine"
 	carStore "CMS/store/car"
 	engineStore "CMS/store/engine"
+	carService "CMS/store/service/car"
+	engineService "CMS/store/service/engine"
 	"fmt"
 	"net/http"
 	"os"
@@ -57,7 +57,5 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	log.Printf("Server Listenig on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, router))
-
-	// 2.37
 
 }

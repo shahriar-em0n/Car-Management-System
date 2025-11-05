@@ -5,7 +5,7 @@ import (
 	"context"
 )
 
-type CarStoreInferface interface {
+type CarStoreInterface interface {
 	GetCarById(ctx context.Context, id string) (models.Car, error)
 
 	GetCarByBrand(ctx context.Context, brand string, isEngine bool) ([]models.Car, error)

@@ -48,11 +48,11 @@ func (s Store) GetCarById(ctx context.Context, id string) (models.Car, error) {
 	return car, nil
 }
 
-func (s Store) GetCarByBrand(ctx context.Context, brand Store, isEngine bool) ([]models.Car, error) {
+func (s Store) GetCarByBrand(ctx context.Context, brand string, isEngine bool) ([]models.Car, error) {
 	var cars []models.Car
 	var query string
 	if isEngine {
-		query = `SELECT c.id, c.name, c.year, c.brand, c.fuel_type, c.engine_id, c.price, c.created_at, c.updated_at, e.id, e.displacement, e.no_of_cyclinders, e.car_range FROM car c LEFT JOIN engine e ON c.engine_id=e.di WHERE c.brand= $1`
+		query = `SELECT c.id, c.name, c.year, c.brand, c.fuel_type, c.engine_id, c.price, c.created_at, c.updated_at, e.id, e.displacement, e.no_of_cylinders, e.range FROM car c LEFT JOIN engine e ON c.engine_id = e.id WHERE c.brand = $1`
 	} else {
 		query = `SELECT id, name, year, brand, fuel_type, engine_id, price, created_at, updated_at FROM car WHERE brand = $1`
 	}

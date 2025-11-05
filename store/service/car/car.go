@@ -3,25 +3,25 @@ package car
 import (
 	"CMS/models"
 	"CMS/store"
+	service "CMS/store/service"
 	"context"
 )
 
 type CarService struct {
-	store store.CarStoreInferface
+	store store.CarStoreInterface
 }
 
-func NewCarService(store store.CarStoreInferface) *CarService {
+// Ensure CarService implements service.CarServiceInterface
+var _ service.CarServiceInterface = (*CarService)(nil)
+
+func NewCarService(store store.CarStoreInterface) *CarService {
 	return &CarService{
 		store: store,
 	}
 }
 
-func (s *CarService) GetCarByID(ctx context.Context, id string) (*models.Car, error) {
-	car, err := s.store.GetCarById(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return &car, nil
+func (s *CarService) GetCarByID(ctx context.Context, id string) (models.Car, error) {
+	return s.store.GetCarById(ctx, id)
 }
 
 func (s *CarService) GetCarsByBrand(ctx context.Context, brand string, isEngine bool) ([]models.Car, error) {
@@ -29,42 +29,39 @@ func (s *CarService) GetCarsByBrand(ctx context.Context, brand string, isEngine 
 	if err != nil {
 		return nil, err
 	}
-
 	return cars, nil
-
 }
 
-func (s *CarService) CreateCar(ctx context.Context, car *models.CarRequest) (*models.Car, error) {
-	if err := models.ValidateRequest(*car); err != nil {
-		return nil, err
-	}
-
-	createdCar, err := s.store.CreateCar(ctx, car)
-	if err != nil {
-		return nil, err
-	}
-	return &createdCar, nil
-}
-
-func (s *CarService) UpdateCar(ctx context.Context, id string, carReq *models.CarRequest) (*models.Car, error) {
+func (s *CarService) CreateCar(ctx context.Context, carReq *models.CarRequest) (models.Car, error) {
 	if err := models.ValidateRequest(*carReq); err != nil {
-		return nil, err
+		return models.Car{}, err
 	}
 
-	updatedCar, err := s.store.UpdateCar(ctx, id, carReq)
+	car, err := s.store.CreateCar(ctx, carReq)
 	if err != nil {
-		return nil, err
+		return models.Car{}, err
 	}
 
-	return &updatedCar, nil
-
+	return car, nil
 }
 
-func (s *CarService) DeleteCar(ctx context.Context, id string) (*models.Car, error) {
-	deletedCar, err := s.store.DeleteCar(ctx, id)
-	if err != nil {
-		return nil, err
+func (s *CarService) UpdateCar(ctx context.Context, id string, carReq *models.CarRequest) (models.Car, error) {
+	if err := models.ValidateRequest(*carReq); err != nil {
+		return models.Car{}, err
 	}
 
-	return &deletedCar, nil
+	car, err := s.store.UpdateCar(ctx, id, carReq)
+	if err != nil {
+		return models.Car{}, err
+	}
+
+	return car, nil
+}
+
+func (s *CarService) DeleteCar(ctx context.Context, id string) (models.Car, error) {
+	car, err := s.store.DeleteCar(ctx, id)
+	if err != nil {
+		return models.Car{}, err
+	}
+	return car, nil
 }
