@@ -8,9 +8,9 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: postgress
+      DB_USER: postgres
       DB_PASSWORD: 12345
-      DB_NAME: postgress
+      DB_NAME: postgres
     depends_on:
       - db
 
@@ -20,13 +20,13 @@ services:
       dockerfile: Dockerfile
 
     environment:
-      POSTGRESS_USER: postgress
-      POSTGRESS_PASSWORD: 12345
-      POSTGRESS_DB: postgress
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgress-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  postgress-data:
+  postgres-data:
