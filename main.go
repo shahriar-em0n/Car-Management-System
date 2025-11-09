@@ -8,6 +8,7 @@ import (
 	engineStore "CMS/store/engine"
 	carService "CMS/store/service/car"
 	engineService "CMS/store/service/engine"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -38,6 +39,12 @@ func main() {
 	engineHandler := engineHandler.NewEngineHandler(engineService)
 
 	router := mux.NewRouter()
+
+	schemaFile := "store/schema.sql"
+	if err := executeSchemaFile(db, schemaFile); err != nil {
+		log.Fatal("Error while executing the schema file: ", err)
+	}
+	
 	router.HandleFunc("/cars/{id}", carHandler.GetCarByBrand).Methods("GET")
 	router.HandleFunc("/cars", carHandler.GetCarByBrand).Methods("GET")
 	router.HandleFunc("/cars", carHandler.GetCarByID).Methods("POST")
@@ -58,4 +65,17 @@ func main() {
 	log.Printf("Server Listenig on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, router))
 
+}
+
+func executeSchemaFile(db *sql.DB, fileNmae string) error {
+	sqlFile, err := os.ReadFile(fileNmae)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFile))
+	if err != nil {
+		return err
+	}
+	return nil
 }
